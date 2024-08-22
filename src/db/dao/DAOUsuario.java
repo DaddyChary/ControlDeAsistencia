@@ -8,9 +8,7 @@ import db.Conexion;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 import model.Usuario;
 
 /**
@@ -47,7 +45,7 @@ public class DAOUsuario implements DAO<Usuario> {
 
     @Override
     public Usuario getOne(int id) throws SQLException {
-        String sql = " SELECT * FROM usuarios WHERE id = " + id;
+        String sql = "SELECT * FROM usuarios WHERE id = " + id;
         ResultSet rs = conn.execute(sql);
         Usuario usuario = new Usuario();
         if (rs.next()) {
@@ -58,7 +56,6 @@ public class DAOUsuario implements DAO<Usuario> {
             usuario.setClave(rs.getString("clave"));
             usuario.setEmail(rs.getString("email"));
             usuario.setRol(rs.getString("rol"));
-
         }
         conn.close();
         return usuario;
@@ -66,8 +63,7 @@ public class DAOUsuario implements DAO<Usuario> {
 
     @Override
     public List<Usuario> getAll() throws SQLException {
-
-        String sql = "SELECT * FROM usuarios ";
+        String sql = "SELECT * FROM usuarios";
         ResultSet rs = conn.execute(sql);
         List<Usuario> listaUsuarios = new ArrayList<>();
         while (rs.next()) {

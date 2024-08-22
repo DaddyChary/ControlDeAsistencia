@@ -2,6 +2,11 @@
 <project-private xmlns="http://www.netbeans.org/ns/project-private/1">
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
-        <group/>
+        <group>
+            <file>file:/D:/TareasSanto%20tomas/Cuarto%20Semestre/Integracion_de_competencias_II/ProyectoControlDeAsistencia/ControlDeAsistencia/src/db/dao/DAOAsistencia.java</file>
+            <file>file:/D:/TareasSanto%20tomas/Cuarto%20Semestre/Integracion_de_competencias_II/ProyectoControlDeAsistencia/ControlDeAsistencia/src/gui/ModuloAdministrador.java</file>
+            <file>file:/D:/TareasSanto%20tomas/Cuarto%20Semestre/Integracion_de_competencias_II/ProyectoControlDeAsistencia/ControlDeAsistencia/src/gui/ModuloUsuario.java</file>
+            <file>file:/D:/TareasSanto%20tomas/Cuarto%20Semestre/Integracion_de_competencias_II/ProyectoControlDeAsistencia/ControlDeAsistencia/src/gui/Login.java</file>
+        </group>
     </open-files>
 </project-private>
