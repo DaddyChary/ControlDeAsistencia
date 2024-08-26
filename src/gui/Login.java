@@ -4,17 +4,28 @@
  */
 package gui;
 
+import db.dao.DAOManager;
+import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.JOptionPane;
+import model.Usuario;
+
 /**
  *
  * @author DaddyChary
  */
 public class Login extends javax.swing.JFrame {
 
-    /**
-     * Creates new form Login
-     */
-    public Login() {
+    private static String emailGlobal;
+
+    private DAOManager manager;
+
+    public Login() throws SQLException {
         initComponents();
+        this.manager = new DAOManager();
+        txtEmail.setText("123");
+        txtPassword.setText("123");
     }
 
     /**
@@ -52,6 +63,11 @@ public class Login extends javax.swing.JFrame {
         txtPassword.setText("jPasswordField1");
 
         btnJoin.setText("Ingresar");
+        btnJoin.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnJoinActionPerformed(evt);
+            }
+        });
 
         txtEmail.setToolTipText("");
 
@@ -167,17 +183,62 @@ public class Login extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnModuloAdministradorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnModuloAdministradorActionPerformed
-        ModuloAdministrador newframe = new ModuloAdministrador();
-        newframe.setVisible(true);
-        this.dispose();
+        try {
+            ModuloAdministrador newframe = new ModuloAdministrador();
+            newframe.setVisible(true);
+            this.dispose();
+        } catch (SQLException ex) {
+            Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
+        }
 
     }//GEN-LAST:event_btnModuloAdministradorActionPerformed
 
     private void btnModuloUsuarioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnModuloUsuarioActionPerformed
-        ModuloUsuario newframe = new ModuloUsuario();
-        newframe.setVisible(true);
-        this.dispose();
+        try {
+            ModuloUsuario newframe = new ModuloUsuario();
+            newframe.setVisible(true);
+            this.dispose();
+        } catch (SQLException ex) {
+            Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }//GEN-LAST:event_btnModuloUsuarioActionPerformed
+
+    private void btnJoinActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnJoinActionPerformed
+        try {
+            Usuario usuario = new Usuario();
+            usuario = manager.getdUsuario().getOne(txtEmail.getText());
+            String email = usuario.getEmail();
+            String pass = usuario.getClave();
+            String tipoUsuario = usuario.getRol();
+
+//            System.out.println(email);
+//            System.out.println(pass);
+//            System.out.println(tipoUsuario);
+//            System.out.println(passIn);
+            if (email.equals(txtEmail.getText()) && pass.equals(txtPassword.getText())) {
+                if (tipoUsuario.equals("empleado")) {
+                    global(email);
+                    ModuloUsuario newframe = new ModuloUsuario();
+                    newframe.setVisible(true);
+                    this.dispose();
+                }
+                if (tipoUsuario.equals("administrador")) {
+                    global(email);
+                    ModuloAdministrador newframe = new ModuloAdministrador();
+                    newframe.setVisible(true);
+                    this.dispose();
+                }
+
+            } else {
+                JOptionPane.showConfirmDialog(null, "Credenciales Incorrectas", "Aceptar", JOptionPane.DEFAULT_OPTION);
+            }
+
+        } catch (SQLException ex) {
+            Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+
+    }//GEN-LAST:event_btnJoinActionPerformed
 
     /**
      * @param args the command line arguments
@@ -209,7 +270,11 @@ public class Login extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new Login().setVisible(true);
+                try {
+                    new Login().setVisible(true);
+                } catch (SQLException ex) {
+                    Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
+                }
             }
         });
     }
@@ -227,4 +292,12 @@ public class Login extends javax.swing.JFrame {
     private javax.swing.JTextField txtEmail;
     private javax.swing.JPasswordField txtPassword;
     // End of variables declaration//GEN-END:variables
+
+    public static void global(String email) {
+        emailGlobal = email;
+    }
+
+    public static String getEmailGlobal() {
+        return emailGlobal;
+    }
 }

@@ -80,4 +80,24 @@ public class DAOUsuario implements DAO<Usuario> {
         conn.close();
         return listaUsuarios;
     }
+    
+    public Usuario getOne(String email) throws SQLException {
+        String sql = "SELECT * FROM usuarios WHERE email = "+ "'" +email+ "'";
+//        System.out.println(sql);
+        ResultSet rs = conn.execute(sql);
+        Usuario usuario = new Usuario();
+        if (rs.next()) {
+            usuario.setId(rs.getInt("id"));
+            usuario.setNombre(rs.getString("nombre"));
+            usuario.setApellido(rs.getString("apellido"));
+            usuario.setRut(rs.getString("rut"));
+            usuario.setClave(rs.getString("clave"));
+            usuario.setEmail(rs.getString("email"));
+            usuario.setRol(rs.getString("rol"));
+        }
+        conn.close();
+        return usuario;
+    }
+
+    
 }

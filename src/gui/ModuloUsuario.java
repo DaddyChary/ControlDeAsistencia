@@ -1,11 +1,15 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
- */
+
 package gui;
 
+import db.dao.DAOManager;
+import java.sql.SQLException;
+import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import model.Asistencia;
+import model.Usuario;
 
 /**
  *
@@ -13,12 +17,17 @@ import java.time.format.DateTimeFormatter;
  */
 public class ModuloUsuario extends javax.swing.JFrame {
 
-    /**
-     * Creates new form MarcarAsistencia
-     */
-    public ModuloUsuario() {
+    private DAOManager manager;
+    private Usuario usuario;
+
+    public ModuloUsuario() throws SQLException {
         initComponents();
         iniciarReloj();
+        this.manager = new DAOManager();
+        this.usuario = new Usuario();
+        obtenerUsuario();
+        txtP.setText("Bienvenido " + usuario.getNombre());
+        verificar();
     }
 
     /**
@@ -33,6 +42,7 @@ public class ModuloUsuario extends javax.swing.JFrame {
         jPanel1 = new javax.swing.JPanel();
         jPanel2 = new javax.swing.JPanel();
         btnCerrarSesion = new javax.swing.JButton();
+        txtP = new javax.swing.JLabel();
         jPanel3 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
         btnMarkEntry = new javax.swing.JButton();
@@ -57,12 +67,18 @@ public class ModuloUsuario extends javax.swing.JFrame {
             }
         });
 
+        txtP.setFont(new java.awt.Font("Dialog", 0, 24)); // NOI18N
+        txtP.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        txtP.setText("jLabel5");
+
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap()
+                .addComponent(txtP, javax.swing.GroupLayout.PREFERRED_SIZE, 234, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(btnCerrarSesion)
                 .addGap(15, 15, 15))
         );
@@ -70,7 +86,9 @@ public class ModuloUsuario extends javax.swing.JFrame {
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addGap(15, 15, 15)
-                .addComponent(btnCerrarSesion, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btnCerrarSesion, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(txtP))
                 .addContainerGap(15, Short.MAX_VALUE))
         );
 
@@ -114,7 +132,7 @@ public class ModuloUsuario extends javax.swing.JFrame {
                 .addContainerGap()
                 .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 149, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(lblEntrada, javax.swing.GroupLayout.DEFAULT_SIZE, 182, Short.MAX_VALUE)
+                .addComponent(lblEntrada, javax.swing.GroupLayout.DEFAULT_SIZE, 178, Short.MAX_VALUE)
                 .addGap(18, 18, 18)
                 .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
@@ -160,7 +178,7 @@ public class ModuloUsuario extends javax.swing.JFrame {
                 .addContainerGap()
                 .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 149, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(lblSalida, javax.swing.GroupLayout.DEFAULT_SIZE, 183, Short.MAX_VALUE)
+                .addComponent(lblSalida, javax.swing.GroupLayout.DEFAULT_SIZE, 179, Short.MAX_VALUE)
                 .addGap(18, 18, 18)
                 .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
@@ -215,9 +233,13 @@ public class ModuloUsuario extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnCerrarSesionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCerrarSesionActionPerformed
-        Login newframe = new Login();
-        newframe.setVisible(true);
-        this.dispose();
+        try {
+            Login newframe = new Login();
+            newframe.setVisible(true);
+            this.dispose();
+        } catch (SQLException ex) {
+            Logger.getLogger(ModuloUsuario.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }//GEN-LAST:event_btnCerrarSesionActionPerformed
 
     /**
@@ -251,7 +273,11 @@ public class ModuloUsuario extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new ModuloUsuario().setVisible(true);
+                try {
+                    new ModuloUsuario().setVisible(true);
+                } catch (SQLException ex) {
+                    Logger.getLogger(ModuloUsuario.class.getName()).log(Level.SEVERE, null, ex);
+                }
             }
         });
     }
@@ -270,6 +296,7 @@ public class ModuloUsuario extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel4;
     private javax.swing.JLabel lblEntrada;
     private javax.swing.JLabel lblSalida;
+    private javax.swing.JLabel txtP;
     // End of variables declaration//GEN-END:variables
 
     public void iniciarReloj() {
@@ -296,4 +323,28 @@ public class ModuloUsuario extends javax.swing.JFrame {
         relojHilo.start();
     }
 
+    public Usuario obtenerUsuario() throws SQLException {
+        String email = Login.getEmailGlobal();
+        usuario = manager.getdUsuario().getOne(email);
+        return usuario;
+    }
+
+    public void verificar() throws SQLException {
+
+        LocalDate fechaHoy = LocalDate.now();
+        String fecha = fechaHoy.toString();
+        System.out.println(fecha);
+        Asistencia asistencia = new Asistencia();
+        asistencia = manager.getdAsistencia().getOneByDate(fecha, usuario.getId());
+
+        if (asistencia.getFecha() != null) {
+//            System.out.println("tiene");
+            if (asistencia.getHora_entrada() != null) {
+                btnMarkEntry.setEnabled(false);
+            }
+            if (asistencia.getHora_salida() != null) {
+                btnMarkOut.setEnabled(false);
+            }
+        }
+    }
 }

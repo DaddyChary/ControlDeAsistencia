@@ -8,6 +8,7 @@ import db.Conexion;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import model.Asistencia;
 import model.RegistroHora;
@@ -144,6 +145,23 @@ public class DAOAsistencia implements DAO<Asistencia> {
         conn.close();
         return listaInasistencias;
     }
+    
+    public Asistencia getOneByDate(String fecha, int id) throws SQLException {
+        String sql = "SELECT * FROM asistencias WHERE id = " + id +" AND fecha = '"+ fecha +"'";
+        System.out.println(sql);
+        ResultSet rs = conn.execute(sql);
+        Asistencia asistencia = new Asistencia();
+        if (rs.next()) {
+            asistencia.setId(rs.getInt("id"));
+            asistencia.setId_usuario_fk(rs.getInt("id_usuario_fk"));
+            asistencia.setFecha(rs.getDate("fecha"));
+            asistencia.setHora_entrada(rs.getString("hora_entrada"));
+            asistencia.setHora_salida(rs.getString("hora_salida"));
+        }
+        conn.close();
+        return asistencia;
+    }
+    
 }
 
 //    public List<Usuario> getInasistencias() throws SQLException {

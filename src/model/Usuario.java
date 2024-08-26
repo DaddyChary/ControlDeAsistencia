@@ -31,6 +31,10 @@ public class Usuario {
         this.rol = rol;
     }
 
+    public String getIdString(){
+        return String.valueOf(id);
+    }
+    
     public int getId() {
         return id;
     }
