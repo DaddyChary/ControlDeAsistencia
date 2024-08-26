@@ -5,11 +5,14 @@
 package gui;
 
 import db.dao.DAOManager;
+import db.dao.DAOUsuario;
 import static java.lang.String.valueOf;
 import java.sql.SQLException;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import model.Usuario;
+import model.tm.TMUsuario;
 
 /**
  *
@@ -18,6 +21,7 @@ import model.Usuario;
 public class ModuloAdministrador extends javax.swing.JFrame {
 
     private DAOManager manager;
+
     /**
      * Creates new form ModuloAdministrador
      */
@@ -25,6 +29,7 @@ public class ModuloAdministrador extends javax.swing.JFrame {
         initComponents();
         try {
             this.manager = new DAOManager();
+            actualizarTablaUsuarios();
         } catch (SQLException ex) {
             Logger.getLogger(ModuloAdministrador.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -78,7 +83,7 @@ public class ModuloAdministrador extends javax.swing.JFrame {
         txtRut = new javax.swing.JTextField();
         jPanel5 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
+        tmUsuarios = new javax.swing.JTable();
         btnAtras = new javax.swing.JButton();
         jPanel3 = new javax.swing.JPanel();
         jPanel6 = new javax.swing.JPanel();
@@ -262,8 +267,8 @@ public class ModuloAdministrador extends javax.swing.JFrame {
                 .addGap(55, 55, 55))
         );
 
-        jTable1.setBackground(new java.awt.Color(255, 204, 204));
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+        tmUsuarios.setBackground(new java.awt.Color(255, 204, 204));
+        tmUsuarios.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null},
                 {null, null, null, null},
@@ -274,7 +279,7 @@ public class ModuloAdministrador extends javax.swing.JFrame {
                 "Title 1", "Title 2", "Title 3", "Title 4"
             }
         ));
-        jScrollPane1.setViewportView(jTable1);
+        jScrollPane1.setViewportView(tmUsuarios);
 
         javax.swing.GroupLayout jPanel5Layout = new javax.swing.GroupLayout(jPanel5);
         jPanel5.setLayout(jPanel5Layout);
@@ -487,7 +492,7 @@ public class ModuloAdministrador extends javax.swing.JFrame {
     }//GEN-LAST:event_txtNombreActionPerformed
 
     private void btnAgregarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAgregarActionPerformed
-        String clave =  String.valueOf(txtpass.getPassword());
+        String clave = String.valueOf(txtpass.getPassword());
         Usuario usuario = new Usuario();
         usuario.setNombre(txtNombre.getText());
         usuario.setApellido(txtApellido.getText());
@@ -497,6 +502,7 @@ public class ModuloAdministrador extends javax.swing.JFrame {
         usuario.setRol(cbRol.getSelectedItem().toString());
         try {
             manager.getdUsuario().create(usuario);
+            actualizarTablaUsuarios();
         } catch (SQLException ex) {
             Logger.getLogger(ModuloAdministrador.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -514,6 +520,7 @@ public class ModuloAdministrador extends javax.swing.JFrame {
             Usuario usuario = new Usuario();
             usuario.setId(Integer.parseInt(txtIdUsuario.getText()));
             manager.getdUsuario().delete(usuario);
+            actualizarTablaUsuarios();
         } catch (SQLException ex) {
             Logger.getLogger(ModuloAdministrador.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -521,16 +528,17 @@ public class ModuloAdministrador extends javax.swing.JFrame {
 
     private void btnModificarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnModificarActionPerformed
         try {
-            String clave =  String.valueOf(txtpass.getPassword());
+            String clave = String.valueOf(txtpass.getPassword());
             Usuario usuario = new Usuario();
             usuario.setId(Integer.parseInt(txtIdUsuario.getText()));
             usuario.setNombre(txtNombre.getText());
             usuario.setApellido(txtApellido.getText());
             usuario.setRut(txtRut.getText());
-            usuario.setClave (clave);
+            usuario.setClave(clave);
             usuario.setEmail(txtEmail.getText());
             usuario.setRol(cbRol.getSelectedItem().toString());
             manager.getdUsuario().update(usuario);
+            actualizarTablaUsuarios();
         } catch (SQLException ex) {
             Logger.getLogger(ModuloAdministrador.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -600,7 +608,6 @@ public class ModuloAdministrador extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JTabbedPane jTabbedPane1;
-    private javax.swing.JTable jTable1;
     private javax.swing.JTable jTable2;
     private java.awt.Menu menu1;
     private java.awt.Menu menu10;
@@ -617,6 +624,7 @@ public class ModuloAdministrador extends javax.swing.JFrame {
     private java.awt.MenuBar menuBar3;
     private java.awt.MenuBar menuBar4;
     private java.awt.MenuBar menuBar5;
+    private javax.swing.JTable tmUsuarios;
     private javax.swing.JTextField txtApellido;
     private javax.swing.JTextField txtEmail;
     private javax.swing.JTextField txtIdUsuario;
@@ -624,4 +632,12 @@ public class ModuloAdministrador extends javax.swing.JFrame {
     private javax.swing.JTextField txtRut;
     private javax.swing.JPasswordField txtpass;
     // End of variables declaration//GEN-END:variables
+
+    public void actualizarTablaUsuarios() throws SQLException {
+        DAOUsuario dao = manager.getdUsuario();
+        List<Usuario> lista = dao.getAll();
+        TMUsuario tmUsuario = new TMUsuario(lista);
+        tmUsuarios.setModel(tmUsuario);
+    }
+
 }
