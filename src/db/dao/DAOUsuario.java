@@ -63,7 +63,7 @@ public class DAOUsuario implements DAO<Usuario> {
 
     @Override
     public List<Usuario> getAll() throws SQLException {
-        String sql = "SELECT * FROM usuarios";
+        String sql = "SELECT * FROM usuarios WHERE activo = TRUE";
         ResultSet rs = conn.execute(sql);
         List<Usuario> listaUsuarios = new ArrayList<>();
         while (rs.next()) {
@@ -80,9 +80,9 @@ public class DAOUsuario implements DAO<Usuario> {
         conn.close();
         return listaUsuarios;
     }
-    
+
     public Usuario getOne(String email) throws SQLException {
-        String sql = "SELECT * FROM usuarios WHERE email = "+ "'" +email+ "'";
+        String sql = "SELECT * FROM usuarios WHERE email = " + "'" + email + "'";
 //        System.out.println(sql);
         ResultSet rs = conn.execute(sql);
         Usuario usuario = new Usuario();
@@ -99,5 +99,9 @@ public class DAOUsuario implements DAO<Usuario> {
         return usuario;
     }
 
-    
+    public void disable(Usuario t) throws SQLException {
+        String sql = "UPDATE usuarios SET activo = FALSE WHERE id = " + t.getId();
+        conn.execute(sql);
+    }
+
 }

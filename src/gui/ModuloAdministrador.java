@@ -4,6 +4,7 @@
  */
 package gui;
 
+import db.dao.DAOAsistencia;
 import db.dao.DAOManager;
 import db.dao.DAOUsuario;
 import static java.lang.String.valueOf;
@@ -11,7 +12,12 @@ import java.sql.SQLException;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import model.Asistencia;
+import model.RegistroHora;
+import model.RegistroInasistencia;
 import model.Usuario;
+import model.tm.TMRegistroHora;
+import model.tm.TMRegistroInasistencia;
 import model.tm.TMUsuario;
 
 /**
@@ -29,6 +35,7 @@ public class ModuloAdministrador extends javax.swing.JFrame {
         initComponents();
         txtIdUsuario.disable();
         this.manager = new DAOManager();
+        setLocationRelativeTo(null);
         actualizarTablaUsuarios();
     }
 
@@ -76,22 +83,21 @@ public class ModuloAdministrador extends javax.swing.JFrame {
         jPanel5 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         tmUsuarios = new javax.swing.JTable();
+        btnMarcar = new javax.swing.JButton();
         btnAtras = new javax.swing.JButton();
         jPanel3 = new javax.swing.JPanel();
         jPanel6 = new javax.swing.JPanel();
-        jLabel2 = new javax.swing.JLabel();
         jPanel8 = new javax.swing.JPanel();
         jScrollPane2 = new javax.swing.JScrollPane();
-        jTable2 = new javax.swing.JTable();
+        tmRegistroInasistencias = new javax.swing.JTable();
         jPanel12 = new javax.swing.JPanel();
         btnInasistencia = new javax.swing.JButton();
         jPanel13 = new javax.swing.JPanel();
         jLabel12 = new javax.swing.JLabel();
-        jLabel10 = new javax.swing.JLabel();
         jPanel7 = new javax.swing.JPanel();
         jPanel9 = new javax.swing.JPanel();
         jScrollPane3 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
+        tmRegistroHoras = new javax.swing.JTable();
         jPanel10 = new javax.swing.JPanel();
         btnAtraso = new javax.swing.JButton();
         btnAnticipado = new javax.swing.JButton();
@@ -300,7 +306,7 @@ public class ModuloAdministrador extends javax.swing.JFrame {
             jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel5Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 507, Short.MAX_VALUE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 525, Short.MAX_VALUE)
                 .addContainerGap())
         );
         jPanel5Layout.setVerticalGroup(
@@ -310,6 +316,13 @@ public class ModuloAdministrador extends javax.swing.JFrame {
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 406, Short.MAX_VALUE)
                 .addContainerGap())
         );
+
+        btnMarcar.setText("Marcar");
+        btnMarcar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnMarcarActionPerformed(evt);
+            }
+        });
 
         btnAtras.setText("Atras");
         btnAtras.addActionListener(new java.awt.event.ActionListener() {
@@ -325,14 +338,15 @@ public class ModuloAdministrador extends javax.swing.JFrame {
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jPanel5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(18, 18, 18)
-                        .addComponent(jPanel5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(100, 100, 100)
-                        .addComponent(btnAtras, javax.swing.GroupLayout.PREFERRED_SIZE, 98, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addComponent(btnAtras, javax.swing.GroupLayout.PREFERRED_SIZE, 85, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(btnMarcar, javax.swing.GroupLayout.PREFERRED_SIZE, 86, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(112, 112, 112)
                         .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 123, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addGap(29, 29, 29))
         );
@@ -346,7 +360,9 @@ public class ModuloAdministrador extends javax.swing.JFrame {
                             .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 126, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addGroup(jPanel1Layout.createSequentialGroup()
                                 .addGap(50, 50, 50)
-                                .addComponent(btnAtras)))
+                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                    .addComponent(btnAtras, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(btnMarcar, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE))))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jPanel5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(jPanel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
@@ -360,23 +376,20 @@ public class ModuloAdministrador extends javax.swing.JFrame {
 
         jPanel6.setBackground(new java.awt.Color(255, 204, 204));
 
-        jLabel2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/logo140.png"))); // NOI18N
-        jLabel2.setToolTipText("");
-
         jPanel8.setBackground(new java.awt.Color(255, 204, 153));
 
-        jTable2.setModel(new javax.swing.table.DefaultTableModel(
+        tmRegistroInasistencias.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null}
+                {},
+                {},
+                {},
+                {}
             },
             new String [] {
-                "Title 1", "Title 2", "Title 3", "Title 4"
+
             }
         ));
-        jScrollPane2.setViewportView(jTable2);
+        jScrollPane2.setViewportView(tmRegistroInasistencias);
 
         jPanel12.setBackground(new java.awt.Color(255, 204, 153));
 
@@ -422,7 +435,7 @@ public class ModuloAdministrador extends javax.swing.JFrame {
             .addGroup(jPanel13Layout.createSequentialGroup()
                 .addGap(75, 75, 75)
                 .addComponent(jLabel12, javax.swing.GroupLayout.PREFERRED_SIZE, 126, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(56, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout jPanel8Layout = new javax.swing.GroupLayout(jPanel8);
@@ -443,17 +456,13 @@ public class ModuloAdministrador extends javax.swing.JFrame {
             .addGroup(jPanel8Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 573, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(jPanel8Layout.createSequentialGroup()
                         .addComponent(jPanel12, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jPanel13, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addGroup(jPanel8Layout.createSequentialGroup()
-                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 20, Short.MAX_VALUE)))
-                .addContainerGap())
+                        .addComponent(jPanel13, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(17, Short.MAX_VALUE))
         );
-
-        jLabel10.setText("reporte de salidas antisipadas, reporte de atrasos, reportes de inasistencia hora de salida 17:30 hora de entrada 09:30");
 
         javax.swing.GroupLayout jPanel6Layout = new javax.swing.GroupLayout(jPanel6);
         jPanel6.setLayout(jPanel6Layout);
@@ -461,25 +470,13 @@ public class ModuloAdministrador extends javax.swing.JFrame {
             jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel6Layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jPanel8, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(jPanel6Layout.createSequentialGroup()
-                        .addComponent(jLabel2)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jLabel10)))
-                .addContainerGap(28, Short.MAX_VALUE))
+                .addComponent(jPanel8, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(25, Short.MAX_VALUE))
         );
         jPanel6Layout.setVerticalGroup(
             jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel6Layout.createSequentialGroup()
-                .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel6Layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 125, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(jPanel6Layout.createSequentialGroup()
-                        .addGap(39, 39, 39)
-                        .addComponent(jLabel10, javax.swing.GroupLayout.PREFERRED_SIZE, 52, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel6Layout.createSequentialGroup()
+                .addContainerGap()
                 .addComponent(jPanel8, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addContainerGap())
         );
@@ -507,24 +504,34 @@ public class ModuloAdministrador extends javax.swing.JFrame {
 
         jPanel9.setBackground(new java.awt.Color(255, 204, 153));
 
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+        tmRegistroHoras.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null}
+                {},
+                {},
+                {},
+                {}
             },
             new String [] {
-                "Title 1", "Title 2", "Title 3", "Title 4"
+
             }
         ));
-        jScrollPane3.setViewportView(jTable1);
+        jScrollPane3.setViewportView(tmRegistroHoras);
 
         jPanel10.setBackground(new java.awt.Color(255, 204, 153));
 
-        btnAtraso.setText("Atraso");
+        btnAtraso.setText("Entrada Tarde");
+        btnAtraso.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnAtrasoActionPerformed(evt);
+            }
+        });
 
-        btnAnticipado.setText("Anticipado");
+        btnAnticipado.setText("Salida Anticipada");
+        btnAnticipado.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnAnticipadoActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel10Layout = new javax.swing.GroupLayout(jPanel10);
         jPanel10.setLayout(jPanel10Layout);
@@ -541,8 +548,8 @@ public class ModuloAdministrador extends javax.swing.JFrame {
             jPanel10Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel10Layout.createSequentialGroup()
                 .addContainerGap(41, Short.MAX_VALUE)
-                .addComponent(btnAnticipado, javax.swing.GroupLayout.PREFERRED_SIZE, 68, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(32, 32, 32)
+                .addComponent(btnAnticipado, javax.swing.GroupLayout.PREFERRED_SIZE, 56, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(44, 44, 44)
                 .addComponent(btnAtraso, javax.swing.GroupLayout.PREFERRED_SIZE, 58, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(40, 40, 40))
         );
@@ -614,7 +621,7 @@ public class ModuloAdministrador extends javax.swing.JFrame {
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jTabbedPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 861, Short.MAX_VALUE)
+            .addComponent(jTabbedPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 861, Short.MAX_VALUE)
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -665,22 +672,22 @@ public class ModuloAdministrador extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_btnAgregarActionPerformed
 
-    private void btnAtrasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAtrasActionPerformed
+    private void btnMarcarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnMarcarActionPerformed
         try {
-            Login newframe = new Login();
+            ModuloUsuario newframe = new ModuloUsuario();
             newframe.setVisible(true);
             this.dispose();
         } catch (SQLException ex) {
             Logger.getLogger(ModuloAdministrador.class.getName()).log(Level.SEVERE, null, ex);
         }
 
-    }//GEN-LAST:event_btnAtrasActionPerformed
+    }//GEN-LAST:event_btnMarcarActionPerformed
 
     private void btnEliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEliminarActionPerformed
         try {
             Usuario usuario = new Usuario();
             usuario.setId(Integer.parseInt(txtIdUsuario.getText()));
-            manager.getdUsuario().delete(usuario);
+            manager.getdUsuario().disable(usuario);
             actualizarTablaUsuarios();
         } catch (SQLException ex) {
             Logger.getLogger(ModuloAdministrador.class.getName()).log(Level.SEVERE, null, ex);
@@ -730,8 +737,42 @@ public class ModuloAdministrador extends javax.swing.JFrame {
     }//GEN-LAST:event_txtRutActionPerformed
 
     private void btnInasistenciaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnInasistenciaActionPerformed
-        // TODO add your handling code here:
+        try {
+            actualizarTablaInasistencia();
+        } catch (SQLException ex) {
+            Logger.getLogger(ModuloAdministrador.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
     }//GEN-LAST:event_btnInasistenciaActionPerformed
+
+    private void btnAtrasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAtrasActionPerformed
+        try {
+            Login newframe = new Login();
+            newframe.setVisible(true);
+            this.dispose();
+        } catch (SQLException ex) {
+            Logger.getLogger(ModuloAdministrador.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+    }//GEN-LAST:event_btnAtrasActionPerformed
+
+    private void btnAnticipadoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAnticipadoActionPerformed
+        try {
+            // TODO add your handling code here:
+            actualizarTablaAnticipado();
+        } catch (SQLException ex) {
+            Logger.getLogger(ModuloAdministrador.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_btnAnticipadoActionPerformed
+
+    private void btnAtrasoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAtrasoActionPerformed
+        try {
+            // TODO add your handling code here:
+            actualizarTablaAtraso();
+        } catch (SQLException ex) {
+            Logger.getLogger(ModuloAdministrador.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_btnAtrasoActionPerformed
 
     /**
      * @param args the command line arguments
@@ -779,13 +820,12 @@ public class ModuloAdministrador extends javax.swing.JFrame {
     private javax.swing.JButton btnAtraso;
     private javax.swing.JButton btnEliminar;
     private javax.swing.JButton btnInasistencia;
+    private javax.swing.JButton btnMarcar;
     private javax.swing.JButton btnModificar;
     private javax.swing.JComboBox<String> cbRol;
     private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel12;
-    private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
@@ -810,8 +850,6 @@ public class ModuloAdministrador extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JTabbedPane jTabbedPane1;
-    private javax.swing.JTable jTable1;
-    private javax.swing.JTable jTable2;
     private java.awt.Menu menu1;
     private java.awt.Menu menu10;
     private java.awt.Menu menu2;
@@ -827,6 +865,8 @@ public class ModuloAdministrador extends javax.swing.JFrame {
     private java.awt.MenuBar menuBar3;
     private java.awt.MenuBar menuBar4;
     private java.awt.MenuBar menuBar5;
+    private javax.swing.JTable tmRegistroHoras;
+    private javax.swing.JTable tmRegistroInasistencias;
     private javax.swing.JTable tmUsuarios;
     private javax.swing.JTextField txtApellido;
     private javax.swing.JTextField txtEmail;
@@ -841,6 +881,27 @@ public class ModuloAdministrador extends javax.swing.JFrame {
         List<Usuario> lista = dao.getAll();
         TMUsuario tmUsuario = new TMUsuario(lista);
         tmUsuarios.setModel(tmUsuario);
+    }
+
+    public void actualizarTablaAnticipado() throws SQLException {
+        DAOAsistencia dao = manager.getdAsistencia();
+        List<RegistroHora> lista = dao.getSalidasAnticipadas();
+        TMRegistroHora tmRegistroHora = new TMRegistroHora(lista);
+        tmRegistroHoras.setModel(tmRegistroHora);
+    }
+
+    public void actualizarTablaAtraso() throws SQLException {
+        DAOAsistencia dao = manager.getdAsistencia();
+        List<RegistroHora> lista = dao.getAtrasos();
+        TMRegistroHora tmRegistroHora = new TMRegistroHora(lista);
+        tmRegistroHoras.setModel(tmRegistroHora);
+    }
+
+    public void actualizarTablaInasistencia() throws SQLException {
+        DAOAsistencia dao = manager.getdAsistencia();
+        List<RegistroInasistencia> lista = dao.getInasistenciasHoy();
+        TMRegistroInasistencia tMRegistroInasistencia = new TMRegistroInasistencia(lista);
+        tmRegistroInasistencias.setModel(tMRegistroInasistencia);
     }
 
 }

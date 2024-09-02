@@ -1,4 +1,3 @@
-
 package gui;
 
 import db.dao.DAOManager;
@@ -8,6 +7,7 @@ import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JOptionPane;
 import model.Asistencia;
 import model.Usuario;
 
@@ -23,6 +23,7 @@ public class ModuloUsuario extends javax.swing.JFrame {
     public ModuloUsuario() throws SQLException {
         initComponents();
         iniciarReloj();
+        setLocationRelativeTo(null);
         this.manager = new DAOManager();
         this.usuario = new Usuario();
         obtenerUsuario();
@@ -69,7 +70,6 @@ public class ModuloUsuario extends javax.swing.JFrame {
 
         txtP.setFont(new java.awt.Font("Dialog", 0, 24)); // NOI18N
         txtP.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        txtP.setText("jLabel5");
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -100,13 +100,17 @@ public class ModuloUsuario extends javax.swing.JFrame {
 
         btnMarkEntry.setBackground(new java.awt.Color(255, 204, 153));
         btnMarkEntry.setText("Marcar");
+        btnMarkEntry.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnMarkEntryActionPerformed(evt);
+            }
+        });
 
         jLabel3.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/logo140.png"))); // NOI18N
         jLabel3.setToolTipText("");
 
         lblEntrada.setFont(new java.awt.Font("Segoe UI", 0, 48)); // NOI18N
         lblEntrada.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        lblEntrada.setText("jLabel5");
 
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
@@ -132,7 +136,7 @@ public class ModuloUsuario extends javax.swing.JFrame {
                 .addContainerGap()
                 .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 149, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(lblEntrada, javax.swing.GroupLayout.DEFAULT_SIZE, 178, Short.MAX_VALUE)
+                .addComponent(lblEntrada, javax.swing.GroupLayout.DEFAULT_SIZE, 182, Short.MAX_VALUE)
                 .addGap(18, 18, 18)
                 .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
@@ -148,13 +152,17 @@ public class ModuloUsuario extends javax.swing.JFrame {
 
         btnMarkOut.setBackground(new java.awt.Color(255, 204, 153));
         btnMarkOut.setText("Marcar");
+        btnMarkOut.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnMarkOutActionPerformed(evt);
+            }
+        });
 
         jLabel4.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/logo140.png"))); // NOI18N
         jLabel4.setToolTipText("");
 
         lblSalida.setFont(new java.awt.Font("Segoe UI", 0, 48)); // NOI18N
         lblSalida.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        lblSalida.setText("jLabel6");
 
         javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
         jPanel4.setLayout(jPanel4Layout);
@@ -178,7 +186,7 @@ public class ModuloUsuario extends javax.swing.JFrame {
                 .addContainerGap()
                 .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 149, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(lblSalida, javax.swing.GroupLayout.DEFAULT_SIZE, 179, Short.MAX_VALUE)
+                .addComponent(lblSalida, javax.swing.GroupLayout.DEFAULT_SIZE, 183, Short.MAX_VALUE)
                 .addGap(18, 18, 18)
                 .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
@@ -241,6 +249,41 @@ public class ModuloUsuario extends javax.swing.JFrame {
             Logger.getLogger(ModuloUsuario.class.getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_btnCerrarSesionActionPerformed
+
+    private void btnMarkEntryActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnMarkEntryActionPerformed
+        try {
+            // TODO add your handling code here:
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm:ss");
+            LocalTime ahora = LocalTime.now();
+            Asistencia asistencia = new Asistencia();
+            asistencia.setId_usuario_fk(usuario.getId());
+            asistencia.setHora_entrada(ahora.format(formatter));
+            manager.getdAsistencia().create(asistencia);
+            JOptionPane.showConfirmDialog(null, "Registrado Correctamente", "Aceptar", JOptionPane.DEFAULT_OPTION);
+            btnMarkEntry.setEnabled(false);
+        } catch (SQLException ex) {
+            Logger.getLogger(ModuloUsuario.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_btnMarkEntryActionPerformed
+
+    private void btnMarkOutActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnMarkOutActionPerformed
+        try {
+            // TODO add your handling code here:
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm:ss");
+            LocalTime ahora = LocalTime.now();
+            LocalDate fechaHoy = LocalDate.now();
+            String fecha = fechaHoy.toString();
+            Asistencia asistencia = new Asistencia();
+            asistencia = manager.getdAsistencia().getOneByIdUser(fecha, usuario.getId());
+            asistencia.setId(asistencia.getId());
+            asistencia.setHora_salida(ahora.format(formatter));
+            manager.getdAsistencia().update(asistencia);
+            JOptionPane.showConfirmDialog(null, "Registrado Correctamente", "Aceptar", JOptionPane.DEFAULT_OPTION);
+            btnMarkOut.setEnabled(false);
+        } catch (SQLException ex) {
+            Logger.getLogger(ModuloUsuario.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_btnMarkOutActionPerformed
 
     /**
      * @param args the command line arguments

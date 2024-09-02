@@ -24,8 +24,9 @@ public class Login extends javax.swing.JFrame {
     public Login() throws SQLException {
         initComponents();
         this.manager = new DAOManager();
-        txtEmail.setText("123");
-        txtPassword.setText("123");
+        setLocationRelativeTo(null);
+//        txtEmail.setText("admin");
+//        txtPassword.setText("admin");
     }
 
     /**
@@ -46,8 +47,6 @@ public class Login extends javax.swing.JFrame {
         jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
         jLabel5 = new javax.swing.JLabel();
-        btnModuloAdministrador = new javax.swing.JButton();
-        btnModuloUsuario = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -59,8 +58,6 @@ public class Login extends javax.swing.JFrame {
         jLabel1.setFont(new java.awt.Font("Dialog", 0, 24)); // NOI18N
         jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel1.setText("Login");
-
-        txtPassword.setText("jPasswordField1");
 
         btnJoin.setText("Ingresar");
         btnJoin.addActionListener(new java.awt.event.ActionListener() {
@@ -120,44 +117,19 @@ public class Login extends javax.swing.JFrame {
                 .addGap(15, 15, 15))
         );
 
-        btnModuloAdministrador.setText("Administrador");
-        btnModuloAdministrador.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnModuloAdministradorActionPerformed(evt);
-            }
-        });
-
-        btnModuloUsuario.setText("Usuario");
-        btnModuloUsuario.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnModuloUsuarioActionPerformed(evt);
-            }
-        });
-
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(50, 50, 50)
-                        .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(25, 25, 25)
-                        .addComponent(btnModuloAdministrador)
-                        .addGap(39, 39, 39)
-                        .addComponent(btnModuloUsuario)))
+                .addGap(50, 50, 50)
+                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(50, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                .addGap(24, 24, 24)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btnModuloAdministrador)
-                    .addComponent(btnModuloUsuario))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 30, Short.MAX_VALUE)
+                .addContainerGap(78, Short.MAX_VALUE)
                 .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(40, 40, 40))
         );
@@ -181,27 +153,6 @@ public class Login extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-
-    private void btnModuloAdministradorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnModuloAdministradorActionPerformed
-        try {
-            ModuloAdministrador newframe = new ModuloAdministrador();
-            newframe.setVisible(true);
-            this.dispose();
-        } catch (SQLException ex) {
-            Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
-        }
-
-    }//GEN-LAST:event_btnModuloAdministradorActionPerformed
-
-    private void btnModuloUsuarioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnModuloUsuarioActionPerformed
-        try {
-            ModuloUsuario newframe = new ModuloUsuario();
-            newframe.setVisible(true);
-            this.dispose();
-        } catch (SQLException ex) {
-            Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }//GEN-LAST:event_btnModuloUsuarioActionPerformed
 
     private void btnJoinActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnJoinActionPerformed
         try {
@@ -228,7 +179,6 @@ public class Login extends javax.swing.JFrame {
                     newframe.setVisible(true);
                     this.dispose();
                 }
-
             } else {
                 JOptionPane.showConfirmDialog(null, "Credenciales Incorrectas", "Aceptar", JOptionPane.DEFAULT_OPTION);
             }
@@ -236,8 +186,6 @@ public class Login extends javax.swing.JFrame {
         } catch (SQLException ex) {
             Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
         }
-
-
     }//GEN-LAST:event_btnJoinActionPerformed
 
     /**
@@ -281,8 +229,6 @@ public class Login extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnJoin;
-    private javax.swing.JButton btnModuloAdministrador;
-    private javax.swing.JButton btnModuloUsuario;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
